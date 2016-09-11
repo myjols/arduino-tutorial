@@ -45,7 +45,7 @@ void loop() {
   Serial.print(redValue);
   Serial.print(" \t Green: ");
   Serial.print(greenValue);
-  Serial.print(" \t Blue");
+  Serial.print(" \t Blue: ");
   Serial.println(blueValue);
 
   analogWrite(redLEDPin, redValue);
