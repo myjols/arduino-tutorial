@@ -22,7 +22,12 @@ Serial.print(voltage);
 // convert the voltage to temperatures in degrees
 Serial.print(", Degrees C: ");
 float temperature = (voltage - 0.5)*100;
-Serial.println(temperature);
+Serial.print(temperature);
+
+Serial.print(", low:middle:high ");
+Serial.print(digitalRead(2));
+Serial.print(digitalRead(3));
+Serial.println(digitalRead(4));
 
 if (temperature < baselineTemp) {
   digitalWrite(2,LOW);
