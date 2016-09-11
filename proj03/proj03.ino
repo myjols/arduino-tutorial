@@ -1,5 +1,9 @@
+const int sensorPin = A0;
+const float baselineTemp = 20.0;
+
 void setup() {
-  // put your setup code here, to run once:
+serial.begin(9600);
+
 
 }
 
