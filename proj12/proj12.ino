@@ -8,8 +8,10 @@ const int greenLed = 4;
 const int redLed = 5;
 int knockVal;
 int switchVal;
-const int quiteKnock = 10;
+const int quiteKnock = 100;
 const int loudKnock = 1000;
+const int timebetween_knocks = 1000;
+unsigned long previousTime = 0;
 boolean locked = false;
 int numberOfKnocks = 0;
 
@@ -40,12 +42,29 @@ void loop() {
   }
   if(locked == true) {
     knockVal = analogRead(piezo);
+    unsigned currentTime = millis();
+    if(numberOfKnocks == 0) {
+      previousTime = currentTime;
+    }
     if(numberOfKnocks < 3 && knockVal >0) {
       if(checkForKnock(knockVal) == true) {
-        numberOfKnocks++;
+        if(currentTime - previousTime < timebetween_knocks){
+          numberOfKnocks++;
+          previousTime = currentTime;
+        }
       }
-      Serial.print(3-numberOfKnocks);
-      Serial.println(" more knocks to go");
+    }
+    if(currentTime - previousTime > timebetween_knocks) {
+      numberOfKnocks = 0;
+      Serial.println("Knocking failed");
+      digitalWrite(redLed,LOW);
+      digitalWrite(greenLed,HIGH);
+      delay(300);
+      digitalWrite(greenLed,LOW);
+      digitalWrite(yellowLed,HIGH);
+      delay(300);
+      digitalWrite(yellowLed,LOW);
+      digitalWrite(redLed,HIGH);
     }
     if(numberOfKnocks >=3) {
       locked = false;
@@ -63,13 +82,11 @@ boolean checkForKnock(int value) {
       digitalWrite(yellowLed,HIGH);
       delay(50);
       digitalWrite(yellowLed,LOW);
-      Serial.print("Valid knock of value: ");
-      Serial.println(value);
+      Serial.print("Knock #: ");
+      Serial.println(1+numberOfKnocks);
       return true;
   }
   else {
-      Serial.print("Bad knock value: ");
-      Serial.println("value");
       return false;
   }
 }
